@@ -16,11 +16,7 @@ automatically.
 
 ### Prerequisites
 
-    gem install compass
-    gem install maruku
-    gem install sprockets
-    gem install fssm
-    gem install yui-compressor
+    gem install compass maruku sprockets fssm yui-compressor
 
 ### Start development
 
@@ -52,4 +48,4 @@ The JS is already minified by the watch script. SASS automatically minifies the 
 
 #### All set up?
 
-Navigate to `index.html` and proceed to the tutorial.
+Proceed to the [tutorial](TUTORIAL.md).
