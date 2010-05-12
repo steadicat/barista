@@ -48,4 +48,4 @@ The JS is already minified by the watch script. SASS automatically minifies the 
 
 #### All set up?
 
-Proceed to the [tutorial](TUTORIAL.md).
+Proceed to the [tutorial](blob/master/TUTORIAL.md).
