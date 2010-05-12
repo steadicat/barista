@@ -10,8 +10,9 @@ JS files are merged into one using
 
 ## Generating the static files
 
-Thanks to Tim Anglade, there's a nice script that watches all the
-source files for changes and compiles them automatically.
+Thanks to [Tim Anglade](http://github.com/timanglade), there's a nice
+script that watches all the source files for changes and compiles them
+automatically.
 
 ### Prerequisites
 
