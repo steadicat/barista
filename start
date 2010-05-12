@@ -43,4 +43,6 @@ end
 
 FSSM.monitor("#{File.dirname(__FILE__)}/", '**/*') do
   update {|base, relative| build(relative)}
+  create {|base, relative| build(relative)}
+  delete {|base, relative| build(relative)}
 end
