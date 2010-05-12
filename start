@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'fssm'
+require 'yui/compressor'
+
+puts ">>> Watching for changes\n    Do CTRL+C to end"
+
+def build(relative)
+  ext = File.extname(relative).downcase
+  return unless ['.sass', '.js', '.haml'].include? ext
+  return if relative.end_with?('/master.js')
+
+  puts "\n>>> Building the #{ext} again for #{File.basename(relative)}"
+
+  case ext
+  when '.sass'
+    # Compile & minify the CSS with compass
+    system 'compass compile static static/styles/master.sass'
+
+  when '.js'
+    # Merge files with sprockets
+    system 'sprocketize static/scripts/main.js > static/scripts/master.js.tmp'
+
+    # Minify
+    f = File.new('static/scripts/master.js', 'w')
+    f.write( YUI::JavaScriptCompressor.new.compress(File.open('static/scripts/master.js.tmp').read) )
+    f.close
+
+    # Cleanup
+    system 'rm static/scripts/master.js.tmp'
+
+  when '.haml'
+    relative_sans_ext = File.dirname(relative) + '/' + File.basename(relative, File.extname(relative))
+    puts relative_sans_ext
+
+    # Regenerate whichever HAML file just triggered the call
+    system "haml -f html5 #{relative} > #{relative_sans_ext}.html.tmp && mv #{relative_sans_ext}.html.tmp #{relative_sans_ext}.html"
+  end
+
+  puts '    ... Done.'
+end
+
+
+FSSM.monitor("#{File.dirname(__FILE__)}/", '**/*') do
+  update {|base, relative| build(relative)}
+end
