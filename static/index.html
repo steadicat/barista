@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href='styles/master.css' rel='stylesheet' type='text/css'>
+    <meta content='chrome=1' http-equiv='X-UA-Compatible'>
+    <title>Barista Web Framework</title>
+  </head>
+  <body>
+    <div id='root'>
+      <a href='#/'>Home</a>
+      <a href='#/setup'>Set up</a>
+      <a href='#/tutorial'>Tutorial</a>
+      <a href='#/reference'>Reference</a>
+      <a href='#/contribute'>Contribute</a>
+      <div class='o-default on' source='home.html'></div>
+      <div class='o-setup off' source='setup.html'></div>
+      <div class='o-tutorial off' source='tutorial.html'></div>
+      <div class='o-reference off' source='reference.html'></div>
+      <div class='o-contribute off' source='contribute.html'></div>
+    </div>
+  </body>
+  <script type='text/javascript'>
+    //<![CDATA[
+      (function() {
+        var js = document.createElement('script');
+        js.type = 'text/javascript'; js.async = true; js.src = 'scripts/master.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(js, s);
+      })();
+    //]]>
+  </script>
+</html>

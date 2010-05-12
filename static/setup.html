@@ -1,0 +1,37 @@
+<h1 id='set_up'>Set up</h1>
+
+<p>Barista is all static files. However, for development ease and performance reasons, some pre-processing is done on the static files. HTML files are generated with <a href='http://haml-lang.com/'>HAML</a>, CSS files are generated with <a href='http://compass-style.org'>Compass</a>/<a href='http://sass-lang.com/'>SASS</a>, and JS files are merged into one using <a href='http://getsprockets.org/'>Sprockets</a>.</p>
+
+<h2 id='generating_the_static_files'>Generating the static files</h2>
+
+<p>Thanks to Tim Anglade, there&#8217;s a nice script that watches all the source files for changes and compiles them automatically.</p>
+
+<h3 id='prerequisites'>Prerequisites</h3>
+
+<pre><code>gem install compass&#x000A;gem install sprockets&#x000A;gem install fssm&#x000A;gem install yui-compressor</code></pre>
+
+<h3 id='start_development'>Start development</h3>
+
+<p>Run:</p>
+
+<pre><code>./start</code></pre>
+
+<p>This will watch all .haml, .sass, and .js files for changes and regenerate the master.css, the master.js and all the .html files.</p>
+
+<h2 id='web_server_config'>Web server config</h2>
+
+<p>While you can, in theory, run a Barista site in your browser as static files, I encourage you to view it through a web server, as that allows you to use absolute paths, and creates fewer surprises when you deploy.</p>
+
+<p>The web server should be configured to add a proper Content-Type header so it won&#8217;t mangle special characters. For Nginx:</p>
+
+<pre><code>charset utf-8;</code></pre>
+
+<p>All the static files should be gzipped:</p>
+
+<pre><code>gzip on;&#x000A;gzip_types text/html text/css application/x-javascript;</code></pre>
+
+<p>The JS is already minified by the watch script. SASS automatically minifies the CSS.</p>
+
+<h4 id='all_set_up'>All set up?</h4>
+
+<p>Proceed to the <a href='#/tutorial'>tutorial</a>.</p>

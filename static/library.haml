@@ -1,0 +1,91 @@
+-#! haml -f html5 library.haml > library.html.tmp && mv library.html.tmp library.html
+!!! Strict
+%html
+  %head
+    %link( rel="stylesheet" type="text/css" href="/styles/master.css" )
+    -#%link( rel="icon" type="image/png" href="/images/favicon.png" )
+    %meta( http-equiv="X-UA-Compatible" content="chrome=1" )
+
+    %title The NoSQL summer: CSS library
+
+  %body
+
+    .header
+
+    .main
+      .page.grid
+
+        %p
+
+          Body text. Body text. Body text. Body text. Body text. Body
+          text. Body text. Body text. Body text. Body text. Body
+          text. Body text. Body text. Body text.Body text. Body text. Body
+          text. Body text. Body text. Body text. Body text.Body text. Body
+          text. Body text. Body text. Body text. Body text. Body text.Body
+          text. Body text. Body text. Body text. Body text. Body
+          text. Body text.Body text. Body text. Body text. Body text. Body
+          text. Body text. Body text.Body text. Body text. Body text. Body
+          text. Body text. Body text. Body text.
+
+        .line
+          .unit.size1of3
+            .column
+              %h1 Heading 1 Heading 1
+
+              %p
+                Body text. Body text. Body text. Body text. Body text. Body
+                text.
+
+              %h2 Heading 2 Heading 2
+
+              %p
+                Body text. Body text. Body text. Body text. Body text. Body
+                text. Body text. Body text.
+
+              %h3 Heading 3 Heading 3 Heading 3 Heading 3
+
+              %p
+                Body text. Body text. Body text. Body text. Body text. Body
+                text. Body text. Body text.
+
+              %h4 Heading 4 Heading 4 Heading 4 Heading 4 Heading 4
+
+              %p
+                Body text. Body text. Body text. Body text. Body text. Body
+                text. Body text. Body text. Body text. Body text. Body text.
+
+              %h5 Heading 4 Heading 4 Heading 4 Heading 4 Heading 4
+
+              %p
+                Body text. Body text. Body text. Body text. Body text. Body
+                text. Body text. Body text. Body text. Body text. Body text.
+
+          .unit.size2of3
+            .column
+              %h1 Main column.
+              %p
+                Body text. Body text. Body text. Body text. Body text. Body
+                text. Body text. Body text. Body text. Body text. Body text.
+
+              %h1.heading
+
+              %p
+                Body text. Body text. Body text. Body text. Body text. Body
+                text. Body text. Body text. Body text. Body text. Body text.
+
+              %a.signup Sign Up
+
+    .footer
+      .credits.info &copy; 2010 Tim Anglade, Stefano J. Attardi. All rights reserved. 
+
+  :javascript
+    (function() {
+      var js = document.createElement('script');
+      js.type = 'text/javascript'; js.async = true; js.src = '/scripts/master.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(js, s);
+    })();
+  %script( type="text/javascript" src="http://use.typekit.com/ina7jwn.js" )
+  :javascript
+    try{Typekit.load();}catch(e){}
+
