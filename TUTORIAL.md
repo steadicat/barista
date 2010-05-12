@@ -128,7 +128,11 @@ this:
 
 And define a JS function like this:
 
-<script src="http://gist.github.com/399049.js?file=barista.js"></script>
+    Barista.Template.teamMember = function(el, data) {
+      $.each(data.rows, function(i, member) {
+        el.clone().insertBefore(el).removeClass('t').removeClass('t-teamMember').text(member.name);
+      });
+    };
 
 Barista provides some useful built-in functions, which means that in most cases you don't need to write any JS code at all! This is how the previous example would look like using Barista built-ins:
 
