@@ -7,7 +7,7 @@ to change. Beware!
 
 Barista is all static files. However, for development ease and
 performance reasons, some pre-processing is done on the static
-files. Follow the instructions in the [set up page](#/setup) to get
+files. Follow the instructions in the [readme](README.md) to get
 a working sample site. Use that as the starting point for your own
 site.
 
@@ -128,11 +128,7 @@ this:
 
 And define a JS function like this:
 
-    Barista.Template.teamMember = function(el, data) {
-      $.each(data.rows, function(i, member) {
-        el.clone().insertBefore(el).removeClass('t').removeClass('t-teamMember').text(member.name);
-      });
-    };
+<script src="http://gist.github.com/399049.js?file=barista.js"></script>
 
 Barista provides some useful built-in functions, which means that in most cases you don't need to write any JS code at all! This is how the previous example would look like using Barista built-ins:
 
