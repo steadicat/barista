@@ -7,7 +7,7 @@ to change. Beware!
 
 Barista is all static files. However, for development ease and
 performance reasons, some pre-processing is done on the static
-files. Follow the instructions in the [set up page](#/setup) to get
+files. Follow the instructions in the [readme](README.md) to get
 a working sample site. Use that as the starting point for your own
 site.
 
