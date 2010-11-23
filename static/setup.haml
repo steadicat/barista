@@ -1,52 +1,58 @@
+
 :maruku
   # Set up
 
   Barista is all static files. However, for development ease and
-  performance reasons, some pre-processing is done on the static
+  performance reasons, some preprocessing is done on the static
   files. HTML files are generated with [HAML](http://haml-lang.com/),
   CSS files are generated with
-  [Compass](http://compass-style.org)/[SASS](http://sass-lang.com/), and
-  JS files are merged into one using
-  [Sprockets](http://getsprockets.org/).
+  [Compass](http://compass-style.org)/[SASS](http://sass-lang.com/),
+  and JS files are (optionally) generated from
+  [CoffeeScript](http://coffeescript.org/) and then merged into one.
 
-  ## Generating the static files
+  ## Development web server
 
-  Thanks to [Tim Anglade](http://github.com/timanglade), there's a
-  nice script that watches all the source files for changes and
-  compiles them automatically.
+  To speed up development without having to worry about preprocessing
+  the files each time you make a change, Barista includes a simple web
+  server that you can use during development that takes care of the
+  preprocessing for you.
 
   ### Prerequisites
 
-      gem install compass maruku sprockets fssm yui-compressor
+  The development server runs on [Node.js](http://nodejs.org/), so
+  you're gonna need to install that first.
+
+  [HAML](http://haml-lang.com/), [SASS](http://sass-lang.com/), and
+  [Compass](http://compass-style.org) are Ruby modules. You can
+  install them all like this:
+
+      gem install compass
+
+  If you want to write your scripts in
+  [CoffeeScript](http://coffeescript.org/), install
+  [Npm](http://npmjs.org/), then:
+
+      npm install coffee-script
+
+  Finally, if you want good support for [Markdown](http://daringfireball.net/projects/markdown/) in your HAML files, you should also install [Maruku](http://maruku.rubyforge.org/):
+
+      gem install maruku
 
   ### Start development
 
   Run:
 
-      ./start
+      node develop.js
 
-  This will watch all .haml, .sass, and .js files for changes and
-  regenerate the master.css, the master.js and all the .html files.
+  Then visit [http://localhost:5678/](http://localhost:5678/). If you
+  did everything right you should see a simple Barista web site.
 
-  ## Web server config
+  ## Deployment
 
-  While you can, in theory, run a Barista site in your browser as
-  static files, I encourage you to view it through a web server, as
-  that allows you to use absolute paths, and creates fewer surprises
-  when you deploy.
+  _Watch this space for help on how to compile and compress all the
+  static files for deployment and (optionally) upload them to
+  CloudFront._
 
-  The web server should be configured to add a proper Content-Type
-  header so it won't mangle special characters. For Nginx:
-
-      charset utf-8;
-
-  All the static files should be gzipped:
-
-      gzip on;
-      gzip_types text/html text/css application/x-javascript;
-
-  The JS is already minified by the watch script. SASS automatically minifies the CSS.
-
-  #### All set up?
+  ## All set up?
 
   Proceed to the [tutorial](#/tutorial).
