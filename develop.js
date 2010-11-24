@@ -1,5 +1,5 @@
 (function() {
-  var PORT, REQUIRE_RULE, STATIC, child_process, coffee, compileCoffee, compileHaml, compileSass, err, exec, fs, handleCss, handleHtml, handleJs, handlers, http, loadJs, log, notFound, path, pickFirst, processRequires, ret, server, stripExt, write, writeFile;
+  var PORT, REQUIRE_RULE, STATIC, child_process, coffee, compileCoffee, compileHaml, compileSass, err, exec, fs, haml, handleCss, handleHtml, handleJs, handleStatic, handlers, http, loadJs, log, notFound, path, pickFirst, processRequires, ret, server, stripExt, write, writeFile;
   var __slice = Array.prototype.slice;
   STATIC = 'static';
   PORT = 5678;
@@ -7,11 +7,20 @@
   path = require('path');
   child_process = require('child_process');
   http = require('http');
-  try {
-    coffee = require('coffee-script');
-  } catch (e) {
-    coffee = void 0;
-  }
+  haml = function() {
+    try {
+      return require('hamljs');
+    } catch (e) {
+      return false;
+    }
+  }();
+  coffee = function() {
+    try {
+      return require('coffee-script');
+    } catch (e) {
+      return false;
+    }
+  }();
   log = function() {
     var arg, args, _i, _len, _results;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -62,8 +71,7 @@
   write = function(res, type) {
     return function(content) {
       res.writeHead(200, {
-        'Content-Type': type,
-        'Content-Length': content.length
+        'Content-Type': type
       });
       res.write(content);
       return res.end();
@@ -96,11 +104,7 @@
   };
   loadJs = function(file, callback) {
     var tries;
-    if (coffee) {
-      tries = ["" + file + ".coffee", "" + file + ".js"];
-    } else {
-      tries = ["" + file + ".js"];
-    }
+    tries = coffee ? ["" + file + ".coffee", "" + file + ".js"] : ["" + file + ".js"];
     return pickFirst.apply(pickFirst, __slice.call(tries).concat([err(callback)(function(file) {
       if (path.extname(file) === '.coffee') {
         return compileCoffee(file, ret(callback));
@@ -112,14 +116,18 @@
     })]));
   };
   /* HTML/HAML */
-  exec = function(command, input, callback) {
-    var arg, args, proc, stderr, stdout, _ref;
+  exec = function(command, input, cwd, callback) {
+    var arg, args, proc, stderr, stdout, _ref, _ref2, _ref3;
     if (!callback) {
-      callback = input;
-      input = void 0;
+      _ref = [cwd, void 0], callback = _ref[0], cwd = _ref[1];
     }
-    _ref = command.split(' '), arg = _ref[0], args = 2 <= _ref.length ? __slice.call(_ref, 1) : [];
-    proc = child_process.spawn(arg, args);
+    if (!callback) {
+      _ref2 = [input, void 0], callback = _ref2[0], input = _ref2[1];
+    }
+    _ref3 = command.split(' '), arg = _ref3[0], args = 2 <= _ref3.length ? __slice.call(_ref3, 1) : [];
+    proc = child_process.spawn(arg, args, {
+      cwd: cwd
+    });
     if (input) {
       proc.stdin.write(input);
       proc.stdin.end();
@@ -142,7 +150,11 @@
     dir = path.dirname(file);
     target = "" + dir + "/" + (path.basename(file, '.haml')) + ".html";
     return fs.readFile(file, 'utf-8', err(callback)(function(content) {
-      return exec('haml -f html5', content, ret(callback));
+      if (haml) {
+        return haml.render(content, ret(callback));
+      } else {
+        return exec('haml -f html5', content, dir, ret(callback));
+      }
     }));
   };
   /* CSS/SASS/Compass */
@@ -188,7 +200,10 @@
   handleJs = function(file, res) {
     return loadJs("" + STATIC + "/" + file, err(log)(write(res, 'application/x-javascript')));
   };
-  handlers = [[/^\/((.+\/)*.+)\.css/, handleCss], [/^\/((.+\/)*.+)\.js/, handleJs], [/^\/((.+\/)*.*)(\.html)?/, handleHtml]];
+  handleStatic = function(file, res) {
+    return fs.readFile("" + STATIC + "/" + file, err(log)(write(res)));
+  };
+  handlers = [[/^\/((.+\/)*.+)\.css/, handleCss], [/^\/((.+\/)*.+)\.js/, handleJs], [/^\/((.+\/)*[^.]*\.[^.]*)/, handleStatic], [/^\/((.+\/)*[^.]*)(\.html)?/, handleHtml]];
   server = function(req, res) {
     var handler, matches, rule, _i, _len, _ref;
     log("" + req.method + " " + req.url);
