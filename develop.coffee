@@ -7,10 +7,8 @@ fs = require 'fs'
 path = require 'path'
 child_process = require 'child_process'
 http = require 'http'
-try
-    coffee = require 'coffee-script'
-catch e
-    coffee = undefined
+haml = try require 'hamljs' catch e then no
+coffee = try require 'coffee-script' catch e then no
 
 log = (args...) ->
     for arg in args
@@ -47,7 +45,7 @@ writeFile = (res, file, type) ->
 
 write = (res, type) ->
     (content) ->
-        res.writeHead 200, { 'Content-Type': type, 'Content-Length': content.length }
+        res.writeHead 200, { 'Content-Type': type }
         res.write content
         res.end()
 
@@ -73,10 +71,7 @@ compileCoffee = (file, callback) ->
             callback no, "document.body.innerHTML = \"<h3 style='color: #c30'>Error in #{file}</h1><pre>#{stack}</pre>\""
 
 loadJs = (file, callback) ->
-    if coffee
-        tries = ["#{file}.coffee", "#{file}.js"]
-    else
-        tries = ["#{file}.js"]
+    tries = if coffee then ["#{file}.coffee", "#{file}.js"] else ["#{file}.js"]
     pickFirst tries..., err(callback) (file) ->
         if path.extname(file) == '.coffee'
             compileCoffee file, ret(callback)
@@ -86,13 +81,15 @@ loadJs = (file, callback) ->
 
 ### HTML/HAML ###
 
-exec = (command, input, callback) ->
+exec = (command, input, cwd, callback) ->
     if not callback
-        callback = input
-        input = undefined
+        [callback, cwd] = [cwd, undefined]
+    if not callback
+        [callback, input] = [input, undefined]
+
     [arg, args...] = command.split ' '
 
-    proc = child_process.spawn arg, args
+    proc = child_process.spawn arg, args, { cwd: cwd }
     if input
         proc.stdin.write input
         proc.stdin.end()
@@ -111,7 +108,10 @@ compileHaml = (file, callback) ->
     dir = path.dirname file
     target = "#{dir}/#{path.basename(file, '.haml')}.html"
     fs.readFile file, 'utf-8', err(callback) (content) ->
-        exec 'haml -f html5', content, ret(callback)
+        if haml
+            haml.render content, ret(callback)
+        else
+            exec 'haml -f html5', content, dir, ret(callback)
 
 ### CSS/SASS/Compass ###
 
@@ -148,10 +148,14 @@ handleCss = (file, res) ->
 handleJs = (file, res) ->
     loadJs "#{STATIC}/#{file}", err(log) write(res, 'application/x-javascript')
 
+handleStatic = (file, res) ->
+    fs.readFile "#{STATIC}/#{file}", err(log) write(res)
+
 handlers = [
     [/^\/((.+\/)*.+)\.css/, handleCss]
     [/^\/((.+\/)*.+)\.js/, handleJs]
-    [/^\/((.+\/)*.*)(\.html)?/, handleHtml]
+    [/^\/((.+\/)*[^.]*\.[^.]*)/, handleStatic]
+    [/^\/((.+\/)*[^.]*)(\.html)?/, handleHtml]
 ]
 
 server = (req, res) ->
